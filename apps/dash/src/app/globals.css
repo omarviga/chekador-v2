@@ -1,0 +1,97 @@
+/**
+ * Chekdor — capa de diseño global (Tailwind v4)
+ *
+ * Los tokens de color de este archivo son los del sitio en producción
+ * (https://chekdor.com.mx): marfil (fondo), tinta (texto), sello (acento),
+ * laton, documento (verde "cuadra") y error.
+ *
+ * Marca: chekdor.com.mx
+ */
+@import "tailwindcss";
+
+/* Escaneo explícito de las fuentes de la app (no hay .git en este checkout,
+   así que no dependemos de la detección automática de Tailwind). */
+@source "../**/*.{ts,tsx}";
+
+@theme {
+  /* Tipografía */
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-serif: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+
+  /* Tinta — texto y superficies oscuras */
+  --color-tinta-50: #f7f5f1;
+  --color-tinta-100: #ebe7df;
+  --color-tinta-200: #d6d0c4;
+  --color-tinta-300: #bdb5a5;
+  --color-tinta-400: #a89e8e;
+  --color-tinta-500: #8b8071;
+  --color-tinta-600: #6b604f;
+  --color-tinta-700: #3f3a31;
+  --color-tinta-800: #26241e;
+  --color-tinta-900: #14171f;
+  --color-tinta-950: #0b0d12;
+
+  /* Marfil — papel cálido */
+  --color-marfil-50: #fdfcf8;
+  --color-marfil-100: #faf7f0;
+  --color-marfil-200: #f4efe3;
+  --color-marfil-300: #ebe3d2;
+  --color-marfil-400: #ddd2bb;
+
+  /* Sello — acento de marca */
+  --color-sello-50: #fdf3ef;
+  --color-sello-100: #fbe3da;
+  --color-sello-200: #f6c6b5;
+  --color-sello-300: #eda286;
+  --color-sello-400: #dc7351;
+  --color-sello-500: #c85832;
+  --color-sello-600: #b5442c;
+  --color-sello-700: #923a23;
+  --color-sello-800: #6d2f1c;
+  --color-sello-900: #4d2215;
+
+  /* Latón — acentos de programa/despacho */
+  --color-laton-50: #fbf6e9;
+  --color-laton-100: #f6ebcd;
+  --color-laton-200: #edd79b;
+  --color-laton-300: #e0bd63;
+  --color-laton-400: #d0a13a;
+  --color-laton-500: #b98a2e;
+  --color-laton-600: #9a6f26;
+  --color-laton-700: #7a561f;
+  --color-laton-900: #453015;
+
+  /* Documento — verde contable (póliza que cuadra) */
+  --color-documento-50: #eef6f2;
+  --color-documento-100: #d3e9df;
+  --color-documento-200: #a7d3bf;
+  --color-documento-400: #479a7c;
+  --color-documento-500: #2f8064;
+  --color-documento-600: #1f6f5c;
+  --color-documento-700: #1a5949;
+  --color-documento-800: #17473b;
+  --color-documento-900: #143a31;
+
+  /* Error — incidencias */
+  --color-error-50: #fdf2f2;
+  --color-error-100: #fbe0e0;
+  --color-error-400: #de5f5f;
+  --color-error-500: #c93a3a;
+  --color-error-600: #a92b2b;
+
+  /* Acento secundario */
+  --color-azul-500: #3566a8;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Los anclajes de la landing no deben quedar tapados por el header sticky. */
+  :target {
+    scroll-margin-top: 5rem;
+  }
+}

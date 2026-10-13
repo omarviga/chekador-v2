@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chekdor — Documento de Arquitectura v1</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            warmwhite: '#FCFCF9',
+            ink: '#111827',
+            borderstone: '#E7E5E4',
+            accent: '#FF4D2E',
+            verdesuccess: '#16A34A',
+            rojomulta: '#DC2626',
+            alerta: '#F59E0B'
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FCFCF9;
+      color: #111827;
+      font-family: 'Inter', sans-serif;
+    }
+    .font-serif-title {
+      font-family: 'Fraunces', serif;
+      font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    }
+    .doc-shadow {
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #D6D3D1;
+      border-radius: 3px;
+    }
+    code, pre {
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body class="bg-warmwhite text-ink antialiased selection:bg-[#FF4D2E]/15 selection:text-[#FF4D2E]">
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="sticky top-0 z-40 bg-warmwhite/95 backdrop-blur-sm border-b border-borderstone px-6 py-3 transition-all">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-7 h-7 bg-accent text-white flex items-center justify-center font-mono font-bold text-sm rounded">
+          Ch
+        </div>
+        <div>
+          <span class="font-serif-title text-base font-semibold tracking-tight text-ink">Chekdor</span>
+          <span class="text-xs text-stone-500 ml-2 font-mono">ARCH-SPEC-v1.0</span>
+        </div>
+        <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-stone-100 text-stone-700 border border-borderstone">
+          Solo doc • Sin UI
+        </span>
+      </div>
+
+      <!-- Quick Nav Jump -->
+      <nav class="hidden md:flex items-center gap-5 text-xs font-mono text-stone-600">
+        <a href="#manifiesto" class="hover:text-accent transition-colors">0. Manifiesto</a>
+        <a href="#monorepo" class="hover:text-accent transition-colors">1. Monorepo</a>
+        <a href="#stack" class="hover:text-accent transition-colors">2. Stack</a>
+        <a href="#diseno" class="hover:text-accent transition-colors">3. Sistema</a>
+        <a href="#sql" class="hover:text-accent transition-colors">4. DB Append-Only</a>
+        <a href="#core" class="hover:text-accent transition-colors">5. Motor Fiscal</a>
+        <a href="#flujo" class="hover:text-accent transition-colors">6. Flujo</a>
+        <a href="#seguridad" class="hover:text-accent transition-colors">7. Cumplimiento</a>
+        <a href="#no-haria" class="hover:text-accent transition-colors">8. Qué No</a>
+        <a href="#roadmap" class="hover:text-accent transition-colors">9. Validación</a>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 text-xs font-mono bg-verdesuccess/10 text-verdesuccess px-2.5 py-1 rounded border border-verdesuccess/20 font-semibold">
+          <span class="w-1.5 h-1.5 rounded-full bg-verdesuccess animate-pulse"></span>
+          Cuadre 0.00 | CONTPAQi OK
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-5xl mx-auto px-6 py-10">
+
+    <!-- Document Header & Metadata Card -->
+    <div class="bg-white border border-borderstone rounded p-8 mb-10 doc-shadow">
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-borderstone">
+        <div>
+          <span class="text-xs font-mono text-accent uppercase font-bold tracking-widest">Documento Técnico Oficial</span>
+          <h1 class="font-serif-title text-3xl md:text-4xl font-semibold tracking-tight text-ink mt-1">
+            Chekdor — Documento de Arquitectura v1 desde cero
+          </h1>
+          <p class="text-sm font-sans text-stone-600 mt-1 italic">
+            "Mi estilo: boring, determinista, auditable para el contador de 50 años."
+          </p>
+        </div>
+      </div>
+
+      <!-- Metadata Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 pt-6 text-xs">
+        <div>
+          <span class="block text-stone-500 font-mono uppercase text-[10px] tracking-wider">Autor</span>
+          <span class="font-semibold text-ink text-sm">CTO Fundador — Chekdor</span>
+        </div>
+        <div>
+          <span class="block text-stone-500 font-mono uppercase text-[10px] tracking-wider">Fecha</span>
+          <span class="font-mono text-ink text-sm">08 Enero 2026</span>
+        </div>
+        <div>
+          <span class="block text-stone-500 font-mono uppercase text-[10px] tracking-wider">Estado</span>
+          <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-mono bg-stone-100 text-stone-800 border border-stone-200">Solo doc • Sin UI</span>
+        </div>
+        <div>
+          <span class="block text-stone-500 font-mono uppercase text-[10px] tracking-wider">Fondo / Tinta</span>
+          <span class="font-mono text-stone-700 text-xs">#FCFCF9 / #111827</span>
+        </div>
+        <div>
+          <span class="block text-stone-500 font-mono uppercase text-[10px] tracking-wider">Acento Fiscal</span>
+          <span class="inline-flex items-center gap-1 font-mono text-accent font-semibold text-xs">
+            <span class="w-2.5 h-2.5 rounded-full bg-accent inline-block"></span> #FF4D2E
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 0. MANIFIESTO -->
+    <section id="manifiesto" class="mb-14 scroll-mt-20">
+      <div class="flex items-baseline gap-3 mb-4">
+        <span class="font-mono text-sm font-bold text-accent">00.</span>
+        <h2 class="font-serif-title text-2xl font-bold text-ink">MANIFIESTO: Un principio, no un pitch</h2>
+      </div>
+
+      <div class="bg-white border border-borderstone rounded p-6 doc-shadow">
+        <blockquote class="text-lg md:text-xl font-serif-title text-ink leading-relaxed border-l-4 border-accent pl-5 my-2 italic">
+          "La nómina no falla por cálculo, falla por captura y por no importar. Chekdor es un adaptador fiscal, no un ERP. No timbra, no dispersa, no guarda fotos. Solo convierte marcas inmutables en póliza que cuadra y layout que importa."
+        </blockquote>
+
+        <div class="grid md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-borderstone text-xs">
+          <div class="bg-stone-50 p-4 rounded border border-borderstone">
+            <span class="font-mono font-bold text-rojomulta uppercase tracking-wider block mb-1">✕ NO ES</span>
+            <p class="text-stone-700 font-medium">ERP, timbrador PAC, banco/dispersor STP, portal RH social con fotos.</p>
+          </div>
+          <div class="bg-stone-50 p-4 rounded border border-borderstone">
+            <span class="font-mono font-bold text-verdesuccess uppercase tracking-wider block mb-1">✓ ES</span>
+            <p class="text-stone-700 font-medium">Adaptador fiscal determinista: <span class="font-mono text-ink">marca → póliza → layout</span>.</p>
+          </div>
+          <div class="bg-stone-50 p-4 rounded border border-borderstone">
+            <span class="font-mono font-bold text-accent uppercase tracking-wider block mb-1">★ PRUEBA DE ÉXITO</span>
+            <p class="text-stone-700 font-medium">Importabilidad en CONTPAQi 2024 sin abrir Microsoft Excel.</p>
+          </div>
+        </div>
+
+        <div class="mt-4 p-3.5 bg-[#FF4D2E]/5 border border-accent/20 rounded flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="font-mono font-bold text-accent text-xs uppercase tracking-wide">OBJETIVO v1:</span>
+            <span class="text-sm font-semibold text-ink">Que el contador de 50 años importe en 2 clicks sin llamar a soporte técnico.</span>
+          </div>
+          <span class="text-xs font-mono text-stone-500 hidden sm:inline">&lt;200ms cálculo</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. MONOREPO & SEPARACIÓN DE CONCERNS -->
+    <section id="monorepo" class="mb-14 scroll-mt-20">
+      <div class="flex items-baseline gap-3 mb-4">
+        <span class="font-mono text-sm font-bold text-accent">01.</span>
+        <h2 class="font-serif-title text-2xl font-bold text-ink">Arquitectura que usaría: Monorepo pnpm + Turborepo</h2>
+      </div>
+      <p class="text-sm text-stone-600 mb-4">
+        Separación radical de concerns. De 35k líneas hoy mezcladas en un solo paquete a 6 paquetes aislados. No Next 16.4 todo-en-uno con PPR disciplina obligatoria.
+      </p>
+
+      <!-- Packages Schema Table -->
+      <div class="bg-white border border-borderstone rounded overflow-hidden doc-shadow mb-6">
+        <div class="px-5 py-3 bg-stone-50 border-b border-borderstone flex justify-between items-center">
+          <span class="font-mono text-xs font-bold uppercase tracking-wider text-stone-700">6 Paquetes / Aplicaciones Autónomas</span>
+          <span class="font-mono text-xs text-stone-500">pnpm + Turborepo</span>
+        </div>
+        <div class="divide-y divide-borderstone text-xs">
+          <!-- Package 1 -->
+          <div class="p-4 hover:bg-stone-50 transition-colors grid md:grid-cols-4 gap-2 items-start">
+            <div class="font-mono font-semibold text-accent flex items-center gap-1.5">
+              <span class="text-stone-400">📦</span> packages/core
+            </div>
+            <div class="md:col-span-3 text-stone-700">
+              <strong class="text-ink">Motor fiscal TS puro</strong>, 0 dependencias externas, 100% funciones puras (SBC, ISR, IMSS). Corre idéntico en browser, Cloudflare Worker y Node. Path directo a Rust/WASM para v2.
+            </div>
+          </div>
+          <!-- Package 2 -->
+          <div class="p-4 hover:bg-stone-50 transition-colors grid md:grid-cols-4 gap-2 items-start">
+            <div class="font-mono font-semibold text-accent flex items-center gap-1.5">
+              <span class="text-stone-400">📦</span> packages/serializers
+            </div>
+            <div class="md:col-span-3 text-stone-700">
+              <strong class="text-ink">9 layouts aislados</strong>. Cada uno con test de importabilidad REAL en CONTPAQi 2024, sin mocks. El pipe <code class="font-mono bg-stone-100 px-1 py-0.5 rounded border border-stone-200">|</code> es el contrato fiscal innegociable.
+            </div>
+          </div>
+          <!-- Package 3 -->
+          <div class="p-4 hover:bg-stone-50 transition-colors grid md:grid-cols-4 gap-2 items-start">
+            <div class="font-mono font-semibold text-accent flex items-center gap-1.5">
+              <span class="text-stone-400">📦</span> packages/db
+            </div>
+            <div class="md:col-span-3 text-stone-700">
+              <strong class="text-ink">Esquema Supabase Postgres</strong>, migraciones SQL, RLS obligatorio multi-tenant, tablas append-only para marcajes. Tareas <code class="font-mono text-stone-600">pg_cron</code> de conservación Art. 804 LFT.
+            </div>
+          </div>
+          <!-- Package 4 -->
+          <div class="p-4 hover:bg-stone-50 transition-colors grid md:grid-cols-4 gap-2 items-start">
+            <div class="font-mono font-semibold text-ink flex items-center gap-1.5">
+              <span class="text-stone-400">🚀</span> apps/landing
+            </div>
+            <div class="md:col-span-3 text-stone-700">
+              <strong class="text-ink">Astro 4 + Tailwind</strong>. 100% estática, 0 JS en cliente, 30KB de peso total. No Next PPR para landing: es un impuesto de complejidad innecesario.
+            </div>
+          </div>
+          <!-- Package 5 -->
+          <div class="p-4 hover:bg-stone-50 transition-colors grid md:grid-cols-4 gap-2 items-start">
+            <div class="font-mono font-semibold text-ink flex items-center gap-1.5">
+              <span class="text-stone-400">🖥️</span> apps/dash
+            </div>
+            <div class="md:col-span-3 text-stone-700">
+              <strong class="text-ink">Remix o Next 15 App Router en Node runtime</strong>. Exclusivo para el despacho contable. Server actions para auth y RLS. Cero PPR disciplina.
+            </div>
+          </div>
+          <!-- Package 6 -->
+          <div class="p-4 hover:bg-stone-50 transition-colors grid md:grid-cols-4 gap-2 items-start">
+            <div class="font-mono font-semibold text-ink flex items-center gap-1.5">
+              <span class="text-stone-400">⚡</span> apps/reader
+            </div>
+            <div class="md:col-span-3 text-stone-700">
+              <strong class="text-ink">Servicio minúsculo Go</strong> para lector NFC USB HID NTAG213. Emite evento directo a Supabase Realtime. Binario compilado local &lt;5MB.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Problem vs Proposed Comparison -->
+      <div class="grid md:grid-cols-2 gap-4 text-xs font-mono">
+        <div class="bg-red-50/60 border border-red-200 p-4 rounded">
+          <div class="font-bold text-rojomulta mb-2 flex items-center gap-1.5">
+            <span>✕</span> HOY — EL PROBLEMA
+          </div>
+          <ul class="space-y-1.5 text-stone-700">
+            <li>• Next 16.4 todo-en-uno: landing + póliza en el mismo bundle</li>
+            <li>• PPR disciplina obligatoria para 30KB de marketing estático</li>
+            <li>• Motor fiscal acoplado a React y Edge runtime frágil</li>
+          </ul>
+        </div>
+        <div class="bg-emerald-50/60 border border-emerald-200 p-4 rounded">
+          <div class="font-bold text-verdesuccess mb-2 flex items-center gap-1.5">
+            <span>✓</span> PROPUESTA — SEPARACIÓN
+          </div>
+          <ul class="space-y-1.5 text-stone-700">
+            <li>• Core sin dependencias, testeable sin Node en &lt;10ms</li>
+            <li>• Landing 0 JS servida directamente en Cloudflare Pages</li>
+            <li>• Dash Node puro: cero Edge para ISR/tarifas de crypto</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. STACK ELEGIDO -->
+    <section id="stack" class="mb-14 scroll-mt-20">
+      <div class="flex items-baseline gap-3 mb-4">
+        <span class="font-mono text-sm font-bold text-accent">02.</span>
+        <h2 class="font-serif-title text-2xl font-bold text-ink">Stack elegido: Boring, determinista, auditable</h2>
+      </div>
+
+      <div class="bg-white border border-borderstone rounded overflow-hidden doc-shadow mb-4">
+        <div class="overflow-x-auto custom-scroll">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-stone-50 border-b border-borderstone text-stone-600 font-mono text-[11px] uppercase tracking-wider">
+                <th class="p-3.5 font-bold">Capa</th>
+                <th class="p-3.5 font-bold">Decisión</th>
+                <th class="p-3.5 font-bold">Por qué (Criterio Contable)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-borderstone font-sans">
+              <tr class="hover:bg-stone-50/80 transition-colors">
+                <td class="p-3.5 font-mono font-semibold text-accent">Lenguaje</td>
+                <td class="p-3.5 font-mono text-ink">TypeScript strict, no any, tsc --noEmitOnError</td>
+                <td class="p-3.5 text-stone-600">Mismo input = mismo output exacto. El contador de 50 años no debuggea excepciones.</td>
+              </tr>
+              <tr class="hover:bg-stone-50/80 transition-colors">
+                <td class="p-3.5 font-mono font-semibold text-accent">DB</td>
+                <td class="p-3.5 font-mono text-ink">Supabase Postgres, RLS multi-tenant empresa_id, pg_cron</td>
+                <td class="p-3.5 text-stone-600">Conservación legal Art. 804 LFT por 1 año + 1 día. Tablas append-only por mandato legal.</td>
+              </tr>
+              <tr class="hover:bg-stone-50/80 transition-colors">
+                <td class="p-3.5 font-mono font-semibold text-accent">Auth</td>
+                <td class="p-3.5 font-mono text-ink">Supabase Auth — roles: worker, admin_empresa, contador</td>
+                <td class="p-3.5 text-stone-600">Roles mínimos herméticos: quien marca no ve; quien ve no borra nada.</td>
+              </tr>
+              <tr class="hover:bg-stone-50/80 transition-colors">
+                <td class="p-3.5 font-mono font-semibold text-accent">Deploy</td>
+                <td class="p-3.5 font-mono text-ink">Landing Cloudflare Pages, Dash Fly.io/Vercel Node, Reader Go binario</td>
+                <td class="p-3.5 text-stone-600">Separar marketing de producto. El Edge runtime no sirve para cripto ni tarifas ISR complejas.</td>
+              </tr>
+              <tr class="hover:bg-stone-50/80 transition-colors">
+                <td class="p-3.5 font-mono font-semibold text-accent">Testing</td>
+                <td class="p-3.5 font-mono text-ink">Vitest + 199 tests core, Playwright solo importabilidad real</td>
+                <td class="p-3.5 text-stone-600">Cero mocks de Excel. Si el archivo no importa directamente en CONTPAQi 2024, no sirve.</td>
+              </tr>
+              <tr class="hover:bg-stone-50/80 transition-colors">
+                <td class="p-3.5 font-mono font-semibold text-accent">Observabilidad</td>
+                <td class="p-3.5 font-mono text-ink">Sin tracking de usuario, solo logs de hash marcaje</td>
+                <td class="p-3.5 text-stone-600">Prueba plena, no vanity analytics. Hash SHA-256 = integridad forense, no invasión de PII.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Terminal Badges -->
+      <div class="bg-stone-900 text-stone-200 p-4 rounded font-mono text-xs flex flex-wrap items-center justify-between gap-3 shadow-inner">
+        <div class="flex items-center gap-3">
+          <span class="text-accent font-bold">$</span>
+          <span class="text-stone-300">tsc --noEmitOnError --strict</span>
+          <span class="text-stone-500">&&</span>
+          <span class="text-stone-300">pnpm turbo run test --filter=core</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="bg-verdesuccess/20 text-emerald-400 px-2 py-0.5 rounded text-[11px] border border-emerald-500/30">199 tests passing</span>
+          <span class="bg-stone-800 text-stone-400 px-2 py-0.5 rounded text-[11px]">0 any en core</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SISTEMA DE DISEÑO DESDE CERO -->
+    <section id="diseno" class="mb-14 scroll-mt-20">
+      <div class="flex items-baseline gap-3 mb-4">
+        <span class="font-mono text-sm font-bold text-accent">03.</span>
+        <h2 class="font-serif-title text-2xl font-bold text-ink">Sistema de Diseño: Contador de 50 años con lentes</h2>
+      </div>
+
+      <div class="bg-white border border-borderstone rounded p-6 doc-shadow space-y-6">
+        <div>
+          <div class="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-accent mb-2">
+            <span>👓 Filosofía Visual</span>
+          </div>
+          <p class="text-sm text-stone-700 leading-relaxed">
+            Contraste estricto AA, tipografía grande, nada de glassmorphism ni transparencias raras. Tablas densas con hover sutil. Nada de gráficos pastel ornamentales, solo KPIs en texto numérico grande. El documento real ES la interfaz de usuario. <em>Si el contador necesita un tutorial para usarlo, fallamos estrepitosamente.</em>
+          </p>
+        </div>
+
+        <!-- Color Palette Grid -->
+        <div>
+          <span class="block font-mono text-xs font-bold uppercase tracking-wider text-stone-500 mb-3">Paleta de Color — Elección Justificada</span>
+          <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2.5 text-[11px] font-mono">
+            <div class="p-2.5 rounded border border-borderstone bg-warmwhite flex flex-col justify-between h-20">
+              <span class="text-stone-500 text-[10px]">Fondo Warm</span>
+              <span class="font-bold text-ink">#FCFCF9</span>
+            </div>
+            <div class="p-2.5 rounded border border-borderstone bg-white flex flex-col justify-between h-20 shadow-sm">
+              <span class="text-stone-500 text-[10px]">Papel</span>
+              <span class="font-bold text-ink">#FFFFFF</span>
+            </div>
+            <div class="p-2.5 rounded border border-ink bg-ink text-white flex flex-col justify-between h-20">
+              <span class="text-stone-300 text-[10px]">Tinta</span>
+              <span class="font-bold">#111827</span>
+            </div>
+            <div class="p-2.5 rounded border border-stone-300 bg-stone-200 text-stone-800 flex flex-col justify-between h-20">
+              <span class="text-stone-600 text-[10px]">Borde</span>
+              <span class="font-bold">#E7E5E4</span>
+            </div>
+            <div class="p-2.5 rounded border border-accent bg-accent text-white flex flex-col justify-between h-20">
+              <span class="text-white/80 text-[10px]">Acento</span>
+              <span class="font-bold">#FF4D2E</span>
+            </div>
+            <div class="p-2.5 rounded border border-verdesuccess bg-verdesuccess text-white flex flex-col justify-between h-20">
+              <span class="text-white/80 text-[10px]">Verde Cuadre</span>
+              <span class="font-bold">#16A34A</span>
+            </div>
+            <div class="p-2.5 rounded border border-rojomulta bg-rojomulta text-white flex flex-col justify-between h-20">
+              <span class="text-white/80 text-[10px]">Rojo Multa</span>
+              <span class="font-bold">#DC2626</span>
+            </div>
+            <div class="p-2.5 rounded border border-alerta bg-alerta text-white flex flex-col justify-between h-20">
+              <span class="text-white/80 text-[10px]">Alerta</span>
+              <span class="font-bold">#F59E0B</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typography System -->
+        <div class="pt-4 border-t border-borderstone grid md:grid-cols-3 gap-4 text-xs">
+          <div class="border border-borderstone rounded p-4 bg-stone-50/50">
+            <span class="font-mono text-stone-500 uppercase text-[10px] block mb-1">Títulos con Carácter</span>
+            <span class="font-serif-title text-xl font-bold text-ink block mb-1">Fraunces 600</span>
+            <p class="text-stone-600">Serio contable con dignidad editorial histórica. Alternativa: Instrument Serif.</p>
+          </div>
+          <div class="border border-borderstone rounded p-4 bg-stone-50/50">
+            <span class="font-mono text-stone-500 uppercase text-[10px] block mb-1">Cuerpo Denso</span>
+            <span class="font-sans text-xl font-medium text-ink block mb-1">Inter 400 / 500</span>
+            <p class="text-stone-600">15px para alta legibilidad en tablas de 100 empleados con fatiga visual.</p>
+          </div>
+          <div class="border border-borderstone rounded p-4 bg-stone-50/50">
+            <span class="font-mono text-stone-500 uppercase text-[10px] block mb-1">Póliza y Pipe |</span>
+            <span class="font-mono text-base font-bold text-ink block mb-1">JetBrains Mono 13px</span>
+            <p class="text-stone-600">Alineación exacta de centavos y cuentas: <code class="text-accent font-bold">510-001 | SUELDOS</code>.</p>
+          </div>
+        </div>
+
+        <!-- Component Rules & UI Preview Card -->
+        <div class="pt-4 border-t border-borderstone">
+          <span class="block font-mono text-xs font-bold uppercase tracking-wider text-stone-500 mb-3">Muestra de Componente Póliza (Contador de 50 Años)</span>
+          <div class="bg-white border border-borderstone rounded overflow-hidden">
+            <div class="px-4 py-2.5 bg-stone-50 border-b border-borderstone flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2">
+                <span class="font-mono font-bold text-ink">PÓLIZA DE DIARIO #024-Q1</span>
+                <span class="text-stone-400">|</span>
+                <span class="text-stone-600 font-sans">Periodo: 01-15 Ene 2026</span>
+              </div>
+              <span class="font-mono text-verdesuccess font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                DIFERENCIA: 0.00 (CUADRA)
+              </span>
+            </div>
+            <div class="p-3 font-mono text-xs overflow-x-auto custom-scroll">
+              <table class="w-full text-left">
+                <thead>
+                  <tr class="text-stone-400 border-b border-stone-200 text-[11px]">
+                    <th class="py-1 px-2">CUENTA</th>
+                    <th class="py-1 px-2">CONCEPTO CONTABLE</th>
+                    <th class="py-1 px-2 text-right">DEBE</th>
+                    <th class="py-1 px-2 text-right">HABER</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-stone-100 text-stone-800">
+                  <tr class="hover:bg-stone-50">
+                    <td class="py-1.5 px-2 font-bold text-ink">510-001</td>
+                    <td class="py-1.5 px-2">SUELDOS Y SALARIOS QUINCENA 01</td>
+                    <td class="py-1.5 px-2 text-right font-semibold">45,000.00</td>
+                    <td class="py-1.5 px-2 text-right text-stone-400">0.00</td>
+                  </tr>
+                  <tr class="hover:bg-stone-50">
+                    <td class="py-1.5 px-2 font-bold text-ink">216-001</td>
+                    <td class="py-1.5 px-2">RETENCIÓN ISR POR SALARIOS ART 96</td>
+                    <td class="py-1.5 px-2 text-right text-stone-400">0.00</td>
+                    <td class="py-1.5 px-2 text-right font-semibold">4,120.50</td>
+                  </tr>
+                  <tr class="hover:bg-stone-50">
+                    <td class="py-1.5 px-2 font-bold text-ink">216-002</td>
+                    <td class="py-1.5 px-2">IMSS CUOTA OBRERA (13 CONCEPTOS)</td>
+                    <td class="py-1.5 px-2 text-right text-stone-400">0.00</td>
+                    <td class="py-1.5 px-2 text-right font-semibold">1,215.30</td>
+                  </tr>
+                  <tr class="hover:bg-stone-50">
+                    <td class="py-1.5 px-2 font-bold text-ink">112-001</td>
+                    <td class="py-1.5 px-2 font-medium">BANCOS (DISPERSIÓN NÓMINA NETA)</td>
+                    <td class="py-1.5 px-2 text-right text-stone-400">0.00</td>
+                    <td class="py-1.5 px-2 text-right font-semibold">39,664.20</td>
+                  </tr>
+                  <tr class="bg-stone-50 font-bold border-t border-stone-300 text-ink">
+                    <td class="py-2 px-2 text-stone-500">SUMAS IGUALES</td>
+                    <td class="py-2 px-2 text-verdesuccess font-mono">CUADRE AUDITADO POR MOTOR CORE</td>
+                    <td class="py-2 px-2 text-right text-verdesuccess">45,000.00</td>
+                    <td class="py-2 px-2 text-right text-verdesuccess">45,000.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. MODELO DE DATOS SQL -->
+    <section id="sql" class="mb-14 scroll-mt-20">
+      <div class="flex items-baseline gap-3 mb-4">
+        <span class="font-mono text-sm font-bold text-accent">04.</span>
+        <h2 class="font-serif-title text-2xl font-bold text-ink">Modelo de Datos: SQL Append-Only y RLS Hermético</h2>
+      </div>
+
+      <div class="bg-white border border-borderstone rounded p-6 doc-shadow mb-4">
+        <div class="flex items-center justify-between pb-3 border-b border-borderstone mb-4">
+          <span class="font-mono text-xs font-bold text-stone-700">supabase/migrations/001_core.sql</span>
+          <span class="font-mono text-[11px] bg-red-50 text-rojomulta px-2 py-0.5 rounded border border-red-200 font-semibold">
+            INMUTABLE: Sin UPDATE ni DELETE en Marcajes
+          </span>
+        </div>
+
+        <pre class="bg-stone-900 text-stone-100 p-4 rounded text-xs leading-relaxed overflow-x-auto custom-scroll font-mono"><code><span class="text-stone-500">-- empresas: catálogo de cuentas contables parametrizable por cada despacho</span>
+<span class="text-pink-400">CREATE TABLE</span> empresas (
+  id <span class="text-emerald-400">UUID PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  rfc <span class="text-emerald-400">TEXT NOT NULL CHECK</span> (char_length(rfc) <span class="text-emerald-400">BETWEEN</span> <span class="text-amber-300">12</span> <span class="text-emerald-400">AND</span> <span class="text-amber-300">13</span>),
+  nombre <span class="text-emerald-400">TEXT NOT NULL</span>,
+  catalogo_cuentas <span class="text-emerald-400">JSONB NOT NULL DEFAULT</span> <span class="text-amber-300">'{}'</span>, <span class="text-stone-500">-- {"sueldo":"510-001", "extra":"..."}</span>
+  created_at <span class="text-emerald-400">TIMESTAMPTZ DEFAULT</span> now()
+);
+
+<span class="text-stone-500">-- trabajadores: datos fiscales mínimos indispensables</span>
+<span class="text-pink-400">CREATE TABLE</span> trabajadores (
+  id <span class="text-emerald-400">UUID PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  empresa_id <span class="text-emerald-400">UUID NOT NULL REFERENCES</span> empresas(id),
+  rfc <span class="text-emerald-400">TEXT NOT NULL</span>, curp <span class="text-emerald-400">TEXT NOT NULL</span>, nss <span class="text-emerald-400">TEXT NOT NULL</span>,
+  salario_diario <span class="text-emerald-400">NUMERIC</span>(<span class="text-amber-300">10</span>,<span class="text-amber-300">2</span>) <span class="text-emerald-400">NOT NULL</span>,
+  sbc <span class="text-emerald-400">NUMERIC</span>(<span class="text-amber-300">10</span>,<span class="text-amber-300">2</span>) <span class="text-emerald-400">NOT NULL</span>,
+  banco <span class="text-emerald-400">TEXT</span>, cuenta <span class="text-emerald-400">TEXT</span>,
+  activo <span class="text-emerald-400">BOOLEAN DEFAULT TRUE</span>,
+  <span class="text-emerald-400">UNIQUE</span>(empresa_id, rfc)
+);
+
+<span class="text-stone-500">-- marcajes: INMUTABLE — sin UPDATE/DELETE — prueba plena Art. 805 LFT</span>
+<span class="text-pink-400">CREATE TABLE</span> marcajes (
+  id <span class="text-emerald-400">UUID PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  trabajador_id <span class="text-emerald-400">UUID NOT NULL REFERENCES</span> trabajadores(id),
+  timestamp_utc <span class="text-emerald-400">TIMESTAMPTZ NOT NULL DEFAULT</span> now(),
+  hash_sha256 <span class="text-emerald-400">TEXT NOT NULL</span>, <span class="text-stone-500">-- SHA256(trabajador_id + timestamp_utc + dispositivo_id)</span>
+  dispositivo_id <span class="text-emerald-400">TEXT NOT NULL</span>,
+  creado_en <span class="text-emerald-400">TIMESTAMPTZ DEFAULT</span> now()
+);
+
+<span class="text-pink-400">ALTER TABLE</span> marcajes <span class="text-emerald-400">ENABLE ROW LEVEL SECURITY</span>;
+<span class="text-stone-500">-- RLS: empresa_id vía trabajadores. NO hay política de UPDATE ni DELETE (solo INSERT/SELECT)</span>
+<span class="text-pink-400">CREATE INDEX</span> marcajes_brin <span class="text-pink-400">ON</span> marcajes <span class="text-pink-400">USING</span> BRIN (timestamp_utc);
+
+<span class="text-stone-500">-- periodos quincenales calculados</span>
+<span class="text-pink-400">CREATE TABLE</span> periodos (
+  id <span class="text-emerald-400">UUID PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  empresa_id <span class="text-emerald-400">UUID REFERENCES</span> empresas(id),
+  inicio <span class="text-emerald-400">DATE NOT NULL</span>, fin <span class="text-emerald-400">DATE NOT NULL</span>,
+  estado <span class="text-emerald-400">TEXT CHECK</span> (estado <span class="text-emerald-400">IN</span> (<span class="text-amber-300">'borrador'</span>, <span class="text-amber-300">'calculado'</span>)) <span class="text-emerald-400">DEFAULT</span> <span class="text-amber-300">'borrador'</span>,
+  total_neto <span class="text-emerald-400">NUMERIC</span>(<span class="text-amber-300">12</span>,<span class="text-amber-300">2</span>), total_isr <span class="text-emerald-400">NUMERIC</span>(<span class="text-amber-300">12</span>,<span class="text-amber-300">2</span>)
+);
+
+<span class="text-stone-500">-- polizas: debe = haber, diferencia 0.00 estricta obligatoria</span>
+<span class="text-pink-400">CREATE TABLE</span> polizas (
+  id <span class="text-emerald-400">UUID PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  periodo_id <span class="text-emerald-400">UUID REFERENCES</span> periodos(id),
+  debe <span class="text-emerald-400">NUMERIC</span>(<span class="text-amber-300">12</span>,<span class="text-amber-300">2</span>) <span class="text-emerald-400">NOT NULL</span>,
+  haber <span class="text-emerald-400">NUMERIC</span>(<span class="text-amber-300">12</span>,<span class="text-amber-300">2</span>) <span class="text-emerald-400">NOT NULL</span>,
+  diferencia <span class="text-emerald-400">NUMERIC</span>(<span class="text-amber-300">12</span>,<span class="text-amber-300">2</span>) <span class="text-emerald-400">GENERATED ALWAYS AS</span> (debe - haber) <span class="text-emerald-400">STORED CHECK</span> (diferencia = <span class="text-amber-300">0.00</span>),
+  movimientos <span class="text-emerald-400">JSONB NOT NULL</span> <span class="text-stone-500">-- [{cuenta, debe, haber, concepto}]</span>
+);
+
+<span class="text-stone-500">-- Conservación Art. 804 LFT: pg_cron 1 año + 1 día (bloqueado DELETE físico)</span>
+<span class="text-pink-400">SELECT</span> cron.schedule(<span class="text-amber-300">'conservacion_804'</span>, <span class="text-amber-300">'0 0 * * *'</span>,
+  $$ <span class="text-stone-500">-- Solo archiva en cold storage, prohibido borrar evidencia probatoria</span> $$);</code></pre>
+      </div>
+
+      <!-- Legal & Security Details -->
+      <div class="grid md:grid-cols-2 gap-4 text-xs">
+        <div class="p-4 bg-white border border-borderstone rounded">
+          <span class="font-mono font-bold text-ink uppercase text-[11px] block mb-1">RLS Multi-Tenant Riguroso</span>
+          <p class="text-stone-600">
+            <code class="font-mono text-accent">empresa_id = auth.jwt() → trabajador.empresa_id</code>. El rol <em>worker</em> solo puede hacer INSERT de marcajes; <em>admin_empresa</em> lee su empresa; y <em>contador</em> consulta y calcula pólizas.
+          </p>
+        </div>
+        <div class="p-4 bg-white border border-borderstone rounded">
+          <span class="font-mono font-bold text-verdesuccess uppercase text-[11px] block mb-1">Inmutabilidad = Prueba Plena Art. 805 LFT</span>
+          <p class="text-stone-600">
+            Cero permisos de UPDATE/DELETE en la tabla de marcajes. El hash SHA-256 por cada marcaje garantiza integridad criptográfica ante la junta laboral o inspección STPS.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. MOTOR FISCAL (ESPECIFICACIÓN PURA) -->
+    <section id="core" class="mb-14 scroll-mt-20">
+      <div class="flex items-baseline gap-3 mb-4">
+        <span class="font-mono text-sm font-bold text-accent">05.</span>
+        <h2 class="font-serif-title text-2xl font-bold text-ink">Motor Fiscal: 100% Funciones Puras, Cero Deps</h2>
+      </div>
+
+      <div class="bg-white border border-borderstone rounded p-6 doc-shadow mb-4">
+        <div class="flex items-center justify-between pb-3 border-b border-borderstone mb-4">
+          <span class="font-mono text-xs font-bold text-stone-700">packages/core/src/nomina.ts</span>
+          <span class="font-mono text-[11px] text-verdesuccess font-semibold">
+            Sin Date, sin fetch, sin Math.random, 0 dependencias
+          </span>
+        </div>
+
+        <pre class="bg-stone-900 text-stone-100 p-4 rounded text-xs leading-relaxed overflow-x-auto custom-scroll font-mono"><code><span class="text-stone-500">// Función pura determinista: corre en Web Worker &lt;200ms para 100 empleados</span>
+<span class="text-pink-400">export function</span> <span class="text-sky-300">calcularNominaQuincenal</span>(e: <span class="text-emerald-300">EntradaNomina</span>): <span class="text-emerald-300">SalidaNomina</span> {
+  <span class="text-stone-500">// 1. Sueldo base</span>
+  <span class="text-pink-400">const</span> sueldo = e.sbc * e.dias_laborados;
+
+  <span class="text-stone-500">// 2. Horas extra — exención art 109 LISR</span>
+  <span class="text-stone-500">// Doble: exento 50% hasta 5 UMA semanal, triple: 100% gravado</span>
+  <span class="text-pink-400">const</span> uma = getUMA(e.ejercicio);
+  <span class="text-pink-400">const</span> topeExentoExtra = uma * <span class="text-amber-300">5</span>;
+  <span class="text-pink-400">const</span> extraDobleTotal = e.horas_extra_doble * (e.sbc / <span class="text-amber-300">8</span>) * <span class="text-amber-300">2</span>;
+  <span class="text-pink-400">const</span> extraDobleExento = Math.min(extraDobleTotal * <span class="text-amber-300">0.5</span>, topeExentoExtra);
+  <span class="text-pink-400">const</span> extraDobleGravado = extraDobleTotal - extraDobleExento;
+  <span class="text-pink-400">const</span> extraTripleTotal = e.horas_extra_triple * (e.sbc / <span class="text-amber-300">8</span>) * <span class="text-amber-300">3</span>; <span class="text-stone-500">// 100% gravado</span>
+
+  <span class="text-stone-500">// 3. Prima dominical — exenta hasta 1 SM art 71 LFT</span>
+  <span class="text-pink-400">const</span> primaTotal = e.prima_dominical_dias * e.sbc * <span class="text-amber-300">0.25</span>;
+  <span class="text-pink-400">const</span> sm = getSalarioMinimo(e.ejercicio);
+  <span class="text-pink-400">const</span> primaExenta = Math.min(primaTotal, sm * e.prima_dominical_dias);
+  <span class="text-pink-400">const</span> primaGravada = primaTotal - primaExenta;
+
+  <span class="text-stone-500">// 4. Base ISR art 96 — Tarifa 2026 (sin subsidio al empleo)</span>
+  <span class="text-pink-400">const</span> baseGravable = sueldo + extraDobleGravado + extraTripleTotal + primaGravada;
+  <span class="text-pink-400">const</span> tarifa = getTarifaISR2026();
+  <span class="text-pink-400">const</span> isr = tarifa.calcular(baseGravable);
+
+  <span class="text-stone-500">// 5. IMSS — 13 conceptos (Corrección de bug: guarderías NO suma a patronal)</span>
+  <span class="text-pink-400">const</span> imss = calcularIMSS13({ sbc: e.sbc, dias: e.dias_laborados, ejercicio: e.ejercicio });
+
+  <span class="text-pink-400">const</span> neto = baseGravable - isr - imss.obrero.total + extraDobleExento + primaExenta;
+  <span class="text-pink-400">const</span> debe = sueldo + extraDobleTotal + extraTripleTotal + primaTotal + imss.patronal.total;
+  <span class="text-pink-400">const</span> haber = isr + imss.obrero.total + imss.patronal.total + neto;
+
+  <span class="text-stone-500">// Invariante contable obligatoria: debe == haber</span>
+  <span class="text-pink-400">if</span> (Math.abs(debe - haber) &gt; <span class="text-amber-300">0.01</span>) <span class="text-pink-400">throw new</span> Error(<span class="text-amber-300">"POLIZA_NO_CUADRA"</span>);
+
+  <span class="text-pink-400">return</span> { sueldo, isr_retenido: isr, neto, debe, haber, ... };
+}</code></pre>
+      </div>
+
+      <!-- Feature Badges -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs font-mono text-center">
+        <div class="p-3 bg-stone-100 rounded border border-borderstone">
+          <span class="block text-accent font-bold text-sm">199</span> Tests en Vitest
+        </div>
+        <div class="p-3 bg-stone-100 rounded border border-borderstone">
+          <span class="block text-ink font-bold text-sm">0 deps</span> Node/Browser/Worker
+        </div>
+        <div class="p-3 bg-stone-100 rounded border border-borderstone">
+          <span class="block text-verdesuccess font-bold text-sm">&lt;200ms</span> 100 Empleados
+        </div>
+        <div class="p-3 bg-stone-100 rounded border border-borderstone">
+          <span class="block text-ink font-bold text-sm">Bug IMSS</span> Guarderías corregido
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. FLUJO IDEAL -->
+    <section id="flujo" class="mb-14 scroll-mt-20">
+      <div class="flex items-baseline gap-3 mb-4">
+        <span class="font-mono text-sm font-bold text-accent">06.</span>
+        <h2 class="font-serif-title text-2xl font-bold text-ink">Flujo Ideal v1: Sin app para trabajador</h2>
+      </div>
+      <p class="text-sm text-stone-600 mb-6">
+        De tag físico de $3 pesos → póliza contable que cuadra → layout que importa en CONTPAQi 2024 en 2 clicks. Cero fotos, cero GPS.
+      </p>
+
+      <!-- Step-by-Step Flow -->
+      <div class="space-y-3">
+        <!-- Step 1 -->
+        <div class="bg-white border border-borderstone rounded p-4 flex items-start gap-4 doc-shadow">
+          <div class="w-9 h-9 rounded bg-accent/10 border border-accent/20 text-accent font-mono font-bold flex items-center justify-center shrink-0 text-sm">
+            01
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h3 class="font-serif-title text-sm font-bold text-ink">Trabajador acerca tag NTAG213 a lector físico</h3>
+              <span class="text-xs font-mono bg-stone-100 px-2 py-0.5 rounded text-stone-600">&lt;100ms</span>
+            </div>
+            <p class="text-xs text-stone-600 mt-1">
+              Lector USB HID estándar. Sin aplicación móvil, sin teléfono personal, sin requerir datos. Solo tag físico de $3 pesos.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="bg-white border border-borderstone rounded p-4 flex items-start gap-4 doc-shadow">
+          <div class="w-9 h-9 rounded bg-accent/10 border border-accent/20 text-accent font-mono font-bold flex items-center justify-center shrink-0 text-sm">
+            02
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h3 class="font-serif-title text-sm font-bold text-ink">Evento Go emite INSERT append-only con SHA-256</h3>
+              <span class="text-xs font-mono bg-stone-100 px-2 py-0.5 rounded text-rojomulta font-semibold">INSERT ONLY</span>
+            </div>
+            <p class="text-xs text-stone-600 mt-1">
+              Binario compilado Go local emite a Supabase Realtime. Registro inmutable con hash SHA256(id + utc + dispositivo). Sin UPDATE.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="bg-white border border-borderstone rounded p-4 flex items-start gap-4 doc-shadow">
+          <div class="w-9 h-9 rounded bg-accent/10 border border-accent/20 text-accent font-mono font-bold flex items-center justify-center shrink-0 text-sm">
+            03
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h3 class="font-serif-title text-sm font-bold text-ink">Realtime al dashboard: el contador ve la asistencia</h3>
+              <span class="text-xs font-mono bg-stone-100 px-2 py-0.5 rounded text-stone-600">Sync Instantáneo</span>
+            </div>
+            <p class="text-xs text-stone-600 mt-1">
+              Tabla densa con hover sutil. Cero fotos de selfie, cero mapas GPS. Solo quién marcó, a qué hora exacta y con qué hash validado.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="bg-white border border-borderstone rounded p-4 flex items-start gap-4 doc-shadow">
+          <div class="w-9 h-9 rounded bg-accent/10 border border-accent/20 text-accent font-mono font-bold flex items-center justify-center shrink-0 text-sm">
+            04
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h3 class="font-serif-title text-sm font-bold text-ink">Click "Calcular quincena": motor fiscal corre en Web Worker</h3>
+              <span class="text-xs font-mono bg-stone-100 px-2 py-0.5 rounded text-verdesuccess font-bold">&lt;200ms</span>
+            </div>
+            <p class="text-xs text-stone-600 mt-1">
+              Ejecución aislada de packages/core en cliente/worker. Procesa 100 empleados en menos de 200 milisegundos con determinismo total.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="bg-white border border-borderstone rounded p-4 flex items-start gap-4 doc-shadow">
+          <div class="w-9 h-9 rounded bg-accent/10 border border-accent/20 text-accent font-mono font-bold flex items-center justify-center shrink-0 text-sm">
+            05
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h3 class="font-serif-title text-sm font-bold text-ink">Genera póliza auditada: preview tipográfico en Pipe |</h3>
+              <span class="text-xs font-mono bg-emerald-50 text-verdesuccess px-2 py-0.5 rounded border border-emerald-200 font-bold">Cuadre 0.00</span>
+            </div>
+            <p class="text-xs text-stone-600 mt-1">
+              Debe = Haber. Diferencia 0.00. Preview en JetBrains Mono con cuentas contables parametrizables por despacho (510-001 vs 6000-01-001).
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="bg-white border border-borderstone rounded p-4 flex items-start gap-4 doc-shadow border-l-4 border-l-accent">
+          <div class="w-9 h-9 rounded bg-accent text-white font-mono font-bold flex items-center justify-center shrink-0 text-sm">
+            06
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h3 class="font-serif-title text-sm font-bold text-ink">Click "Descargar layout": importa en CONTPAQi 2024</h3>
+              <span class="text-xs font-mono bg-accent/10 text-accent px-2 py-0.5 rounded font-bold">2 clicks</span>
+            </div>
+            <p class="text-xs text-stone-600 mt-1 font-medium">
+              Layout probado en software real, no con simuladores. 2 archivos limpios, 2 clicks de importación directa. El contador timbra donde siempre lo ha hecho.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. SEGURIDAD Y CUMPLIMIENTO 2027 -->
+    <section id="seguridad" class="mb-14 scroll-mt-20">
+      <div class="flex items-baseline gap-3 mb-4">
+        <span class="font-mono text-sm font-bold text-accent">07.</span>
+        <h2 class="font-serif-title text-2xl font-bold text-ink">Seguridad y Cumplimiento 2027: Inmutabilidad = Prueba Plena</h2>
+      </div>
+
+      <!-- Legal Warning Banner -->
+      <div class="bg-amber-50 border-l-4 border-alerta p-4 rounded-r mb-6 text-xs text-stone-800">
+        <div class="flex items-center gap-2 font-mono font-bold text-alerta uppercase tracking-wider mb-1">
+          <span>⚠ Riesgo Legal Directo para Empresas</span>
+        </div>
+        <p class="leading-relaxed">
+          <strong>Multa de $28,285 a $565,700 MXN</strong> (Art. 994 Fracc. IV Bis LFT) por cada trabajador sin registro electrónico verificable conforme al <strong>Art. 132 Fracc. XXXIV a partir del 1 de enero de 2027</strong>.
+          Las disposiciones de la STPS exigen integridad inmutable. No requieren fotos ni geolocalización invasiva.
+        </p>
+      </div>
+
+      <!-- Inmutabilidad Checklist & What We Don't Store -->
+      <div class="grid md:grid-cols-2 gap-4 text-xs">
+        <div class="bg-white border border-borderstone rounded p-5 doc-shadow">
+          <span class="font-mono font-bold text-verdesuccess uppercase text-[11px] block mb-3">✓ Inmutabilidad — Art. 805 LFT</span>
+          <ul class="space-y-2 text-stone-700">
+            <li class="flex items-center gap-2">
+              <span class="text-verdesuccess font-bold">✓</span>
+              <span>Hash SHA-256 por marcaje = valor probatorio pleno</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-verdesuccess font-bold">✓</span>
+              <span>Sin UPDATE ni DELETE en base de datos (append-only)</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-verdesuccess font-bold">✓</span>
+              <span>Índice BRIN para timestamps y conservación pg_cron</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-verdesuccess font-bold">✓</span>
+              <span>RLS multi-tenant estricto vía JWT empresa_id</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-white border border-borderstone rounded p-5 doc-shadow">
+          <span class="font-mono font-bold text-rojomulta uppercase text-[11px] block mb-3">✕ Qué NO Guardamos (Protección y Cero PII)</span>
+          <ul class="space-y-2 text-stone-700">
+            <li class="flex items-center gap-2">
+              <span class="text-rojomulta font-bold">✕</span>
+              <span>Fotos ni selfies de trabajadores</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-rojomulta font-bold">✕</span>
+              <span>Rastreo GPS invasivo (es para Facture, no para despacho)</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-rojomulta font-bold">✕</span>
+              <span>Datos biométricos faciales o dactilares</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-rojomulta font-bold">✕</span>
+              <span>Tracking de comportamiento o analítica de usuario</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. QUÉ NO HARÍA (DECIR NO ES ARQUITECTURA) -->
+    <section id="no-haria" class="mb-14 scroll-mt-20">
+      <div class="flex items-baseline gap-3 mb-4">
+        <span class="font-mono text-sm font-bold text-accent">08.</span>
+        <h2 class="font-serif-title text-2xl font-bold text-ink">Qué No Haría: Decir no ES arquitectura</h2>
+      </div>
+
+      <div class="bg-white border border-borderstone rounded p-6 doc-shadow">
+        <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs mb-4">
+          <div class="p-3 bg-stone-50 border border-borderstone rounded">
+            <span class="font-mono font-bold text-rojomulta block mb-1">✕ No timbrado PAC</span>
+            <p class="text-stone-600">Ya timbran donde siempre. Nosotros solo damos el layout que importa.</p>
+          </div>
+          <div class="p-3 bg-stone-50 border border-borderstone rounded">
+            <span class="font-mono font-bold text-rojomulta block mb-1">✕ No dispersión STP</span>
+            <p class="text-stone-600">$20/empleado por STP es un impuesto bancario, no valor contable.</p>
+          </div>
+          <div class="p-3 bg-stone-50 border border-borderstone rounded">
+            <span class="font-mono font-bold text-rojomulta block mb-1">✕ No finiquitos en v1</span>
+            <p class="text-stone-600">v1 es quincena que cuadra perfecta. Finiquitos en v2 si los despachos pagan.</p>
+          </div>
+          <div class="p-3 bg-stone-50 border border-borderstone rounded">
+            <span class="font-mono font-bold text-rojomulta block mb-1">✕ No NOM-035 en landing</span>
+            <p class="text-stone-600">Landing estática de 30KB. La NOM-035 es producto, no promesa de marketing.</p>
+          </div>
+          <div class="p-3 bg-stone-50 border border-borderstone rounded">
+            <span class="font-mono font-bold text-rojomulta block mb-1">✕ No 9 layouts a la vez</span>
+            <p class="text-stone-600">1 layout que importe en CONTPAQi 2024 vale más que 9 simulaciones con mocks.</p>
+          </div>
+          <div class="p-3 bg-stone-50 border border-borderstone rounded">
+            <span class="font-mono font-bold text-rojomulta block mb-1">✕ No React en landing</span>
+            <p class="text-stone-600">Astro 4 con 0 JS. Next PPR para marketing es un impuesto innecesario.</p>
+          </div>
+          <div class="p-3 bg-stone-50 border border-borderstone rounded">
+            <span class="font-mono font-bold text-rojomulta block mb-1">✕ No Edge para ISR</span>
+            <p class="text-stone-600">ISR y hashes en Edge es una lotería de compatibilidad. Node puro y determinista.</p>
+          </div>
+          <div class="p-3 bg-stone-50 border border-borderstone rounded">
+            <span class="font-mono font-bold text-rojomulta block mb-1">✕ No app de celular</span>
+            <p class="text-stone-600">Tag NTAG213 de $3. Sin celulares rotos, sin fotos borrosas, sin GPS fallando.</p>
+          </div>
+        </div>
+
+        <div class="p-3 bg-stone-100 rounded text-center font-mono text-xs text-stone-800 font-bold border border-stone-200">
+          REGLA INQUEBRANTABLE: "Si no ayuda a que la póliza cuadre y el layout importe, NO VA en v1."
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. VALIDACIÓN Y ROADMAP -->
+    <section id="roadmap" class="mb-14 scroll-mt-20">
+      <div class="flex items-baseline gap-3 mb-4">
+        <span class="font-mono text-sm font-bold text-accent">09.</span>
+        <h2 class="font-serif-title text-2xl font-bold text-ink">Validación y Roadmap: Importabilidad real, no vanity metrics</h2>
+      </div>
+
+      <!-- Fase 0 Table -->
+      <div class="bg-white border border-borderstone rounded p-6 doc-shadow mb-6">
+        <div class="flex items-center justify-between pb-3 border-b border-borderstone mb-4">
+          <div>
+            <span class="text-xs font-mono font-bold uppercase tracking-wider text-accent">FASE 0 — VALIDACIÓN EN CAMPO (HOY)</span>
+            <h3 class="font-serif-title text-base font-bold text-ink mt-0.5">2 despachos contables en Acámbaro con paquete USB</h3>
+          </div>
+          <span class="text-xs font-mono bg-stone-100 px-2.5 py-1 rounded text-stone-700">2 archivos + hoja ¿importó?</span>
+        </div>
+
+        <div class="overflow-x-auto custom-scroll">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-stone-50 border-b border-borderstone text-stone-600 font-mono text-[11px] uppercase">
+                <th class="p-3 font-bold">Pregunta de Validación</th>
+                <th class="p-3 font-bold">Respuesta Esperada</th>
+                <th class="p-3 font-bold">Si Falla (Acción Inmediata)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-borderstone font-sans">
+              <tr>
+                <td class="p-3 font-semibold text-ink">¿Importó?</td>
+                <td class="p-3 text-verdesuccess font-mono font-semibold">Sí en CONTPAQi 2024</td>
+                <td class="p-3 text-rojomulta font-mono">No hay producto, detener roadmap</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-ink">¿Versión CONTPAQi?</td>
+                <td class="p-3 text-ink font-mono">2024.1.1+ exacta</td>
+                <td class="p-3 text-stone-600 font-mono">Ajustar estructura del pipe |</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-ink">¿Qué cuenta falló?</td>
+                <td class="p-3 text-ink font-mono">510-001 vs 6000-01-001</td>
+                <td class="p-3 text-stone-600 font-mono">Parametrizar catalogo_cuentas en JSONB</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Roadmap Phases Grid -->
+      <div class="grid md:grid-cols-3 gap-4 text-xs font-mono">
+        <div class="bg-white border border-borderstone rounded p-4 doc-shadow">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-bold text-accent">FASE 1</span>
+            <span class="bg-stone-100 px-1.5 py-0.5 rounded text-[10px] text-stone-600">SIGUIENTE</span>
+          </div>
+          <h4 class="font-sans font-bold text-sm text-ink mb-1">Parametrizar lft_topes por Ejercicio</h4>
+          <p class="text-stone-600 font-sans text-xs">
+            Tarifa ISR 2026, UMA, tope de 12 horas diarias parametrizable por reforma 2027. Cero valores hardcodeados en código.
+          </p>
+        </div>
+
+        <div class="bg-white border border-borderstone rounded p-4 doc-shadow">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-bold text-accent">FASE 2</span>
+            <span class="bg-stone-100 px-1.5 py-0.5 rounded text-[10px] text-stone-600">SIGUIENTE</span>
+          </div>
+          <h4 class="font-sans font-bold text-sm text-ink mb-1">Plan Despacho: $1,299 / 100 emp</h4>
+          <p class="text-stone-600 font-sans text-xs">
+            Un solo plan, un solo precio transparente. Cero esquemas freemium engañosos. Si no pagan $1,299 MXN, no existe Product-Market Fit.
+          </p>
+        </div>
+
+        <div class="bg-white border border-borderstone rounded p-4 doc-shadow border-dashed">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-bold text-stone-400">FASE 3</span>
+            <span class="bg-stone-100 px-1.5 py-0.5 rounded text-[10px] text-stone-500">CONDICIONAL</span>
+          </div>
+          <h4 class="font-sans font-bold text-sm text-ink mb-1">Rust / WASM Core</h4>
+          <p class="text-stone-600 font-sans text-xs">
+            Solo si 20 despachos pagan activamente. Migrar Core TS a Rust para &lt;50ms en 100 empleados. Si no, TypeScript es más que suficiente.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CIERRE & LEGAL DISCLAIMER -->
+    <footer class="pt-8 pb-16 border-t border-borderstone">
+      <div class="bg-white border border-borderstone rounded p-6 doc-shadow">
+        <div class="flex items-start gap-4">
+          <div class="w-8 h-8 rounded bg-stone-100 border border-stone-300 flex items-center justify-center font-mono text-stone-600 font-bold shrink-0 text-xs">
+            §
+          </div>
+          <div>
+            <h4 class="font-serif-title font-bold text-ink text-base">Cierre y Conclusión de Arquitectura</h4>
+            <p class="text-xs text-stone-600 mt-1 leading-relaxed font-sans">
+              Este documento no constituye asesoría legal ni fiscal individualizada. Presenta un stack deliberadamente simple, un motor 100% puro y determinista, y el documento real como única interfaz de usuario.
+            </p>
+            <p class="text-xs text-ink font-semibold mt-2 font-mono">
+              La nómina no falla por cálculo, falla por captura. Chekdor es un adaptador fiscal: convierte marcas inmutables en póliza que cuadra y layout que importa. Sin timbrar, sin dispersar, sin fotos.
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+</body>
+</html>
