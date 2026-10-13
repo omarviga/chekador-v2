@@ -1,0 +1,6 @@
+{
+  "name": "Chekdor · Sistema de Registro LFT y Póliza CONTPAQi",
+  "description": "Sistema de registro electrónico de jornada laboral conforme al Art. 132 fr. XXXIV LFT y generación determinista de póliza contable pipe UTF-8 BOM para CONTPAQi.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
