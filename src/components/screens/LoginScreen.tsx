@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Despacho } from '../../types';
-import { ComplianceHeader } from '../ComplianceHeader';
 import { ComplianceFooter } from '../ComplianceFooter';
 
 interface LoginScreenProps {
@@ -34,8 +33,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
   return (
     <div className="min-h-full flex flex-col justify-between selection:bg-[#C65D3A]/20 selection:text-[#1A1A1A]">
-      <ComplianceHeader onOpenAuditoria={onOpenAuditoria} />
-
       {/* Main Centered Container */}
       <main className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 my-auto">
         <div className="w-full max-w-[400px] bg-white border border-[#E7E5E4] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04),0_1px_3px_rgba(0,0,0,0.02)] p-8">

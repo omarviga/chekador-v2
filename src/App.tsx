@@ -6,7 +6,6 @@
 import React, { useState } from 'react';
 import { Despacho, Empresa, Trabajador, MarcajeAsistencia, CatalogoTipo } from './types';
 import { DEMO_EMPRESA, DEMO_TRABAJADORES, DEMO_MARCAJES_INMUTABLES } from './mock/demoData';
-import { ComplianceHeader } from './components/ComplianceHeader';
 import { ComplianceFooter } from './components/ComplianceFooter';
 import { Sidebar, NavTab } from './components/Sidebar';
 import { LoginScreen } from './components/screens/LoginScreen';
@@ -177,14 +176,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FCFCF9] text-[#1A1A1A] antialiased selection:bg-[#C65D3A]/20 selection:text-[#1A1A1A]">
-      {/* Top Compliance Banner */}
-      <ComplianceHeader
-        empresaNombre={empresaSeleccionada?.nombre}
-        onOpenAuditoria={() => handleOpenAuditoriaConTab('tests')}
-      />
-
-      <div className="flex flex-1 w-full min-h-[calc(100vh-37px)] overflow-hidden">
-        {/* Dark Sidebar 240px */}
+      <div className="flex flex-1 w-full min-h-screen overflow-hidden">
+        {/* Sidebar 240px (tema papel) */}
         <Sidebar
           currentTab={currentTab}
           onSelectTab={setCurrentTab}
